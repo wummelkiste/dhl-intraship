@@ -84,7 +84,7 @@ module Dhl
             end
 
           else
-            raise "Intraship call failed with code #{r[:status][:status_code]}: #{r[:status][:status_message]} (Status messages: #{r[:creation_state][:status_message].to_s})"
+            raise "Intraship call failed with code #{r[:status][:status_code]}: #{r[:status][:status_message]}#{r[:creation_state] ? " (Status messages: #{r[:creation_state][:status_message].to_s})" : ""}"
           end
         rescue Savon::Error => error
           raise error
@@ -97,7 +97,7 @@ module Dhl
           r = result.to_hash[:delete_shipment_response]
 
           # Return true if successful
-          raise "Intraship call failed with code #{r[:status][:status_code]}: #{r[:status][:status_message]} (Status messages: #{r[:deletion_state][:status].to_s})" unless r[:status][:status_code] == '0'
+          raise "Intraship call failed with code #{r[:status][:status_code]}: #{r[:status][:status_message]}#{r[:deletion_state] ? " (Status messages: #{r[:deletion_state][:status].to_s})" : ""}" unless r[:status][:status_code] == '0'
 
           true
         rescue Savon::Error => error
@@ -110,7 +110,7 @@ module Dhl
           result = do_simple_shipment_number_only_request('DoManifestDDRequest', shipment_number)
           r = result.to_hash[:do_manifest_response]
 
-          raise "Intraship call failed with code #{r[:status][:status_code]}: #{r[:status][:status_message]} (Status messages: #{r[:manifest_state][:status].to_s})" unless r[:status][:status_code] == '0'
+          raise "Intraship call failed with code #{r[:status][:status_code]}: #{r[:status][:status_message]}#{r[:manifest_state] ? " (Status messages: #{r[:manifest_state][:status].to_s})" : ""}" unless r[:status][:status_code] == '0'
 
           true
         rescue Savon::Error => error
